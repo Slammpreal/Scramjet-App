@@ -106,11 +106,6 @@ html, body {
   background: rgba(255,255,255,0.1);
 }
 
-/* Hidden submit button */
-#submit-hidden {
-  display: none;
-}
-
 #sj-error {
   color: #ff6b6b;
   font-size: 0.9rem;
@@ -135,14 +130,12 @@ footer {
   <div id="main-page-content">
     <h1 class="main-title">ZGC Proxy</h1>
     <p class="main-desc">Browse the internet freely. Powered by Scramjet</p>
-    
-    <!-- Form fixed to trigger Scramjet logic -->
+
     <form id="sj-form">
       <input id="sj-search-engine" value="https://www.google.com/search?q=%s" type="hidden" />
-      <input id="sj-address" type="text" placeholder="Search the web freely" />
-      <button id="submit-hidden" type="submit"></button>
+      <input id="sj-address" type="text" placeholder="Search the web freely" autocomplete="off" />
     </form>
-    
+
     <p id="sj-error"></p>
     <pre id="sj-error-code"></pre>
   </div>
@@ -172,6 +165,16 @@ document.addEventListener("DOMContentLoaded", () => {
       modes: { repulse: { distance: 100 }, push: { particles_nb: 4 } }
     },
     retina_detect: true
+  });
+
+  // ✅ Ensure Enter key triggers Scramjet’s handler
+  const input = document.getElementById("sj-address");
+  const form = document.getElementById("sj-form");
+  input.addEventListener("keydown", e => {
+    if (e.key === "Enter") {
+      e.preventDefault();
+      form.dispatchEvent(new Event("submit", { cancelable: true, bubbles: true }));
+    }
   });
 });
 </script>
