@@ -161,7 +161,7 @@
 </div>
 
 <footer>
-    <div>Scramjet &copy; MW 2025</div>
+    <div>ZGC &copy; MW 2025</div>
 </footer>
 
 <script src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js"></script>
@@ -183,6 +183,24 @@ document.addEventListener("DOMContentLoaded", () => {
             modes: { repulse: { distance: 100 }, push: { particles_nb: 4 } }
         },
         retina_detect: true
+    });
+
+    // Fix: Scramjet proxy form behavior
+    const form = document.getElementById("sj-form");
+    const addressInput = document.getElementById("sj-address");
+    const searchEngine = document.getElementById("sj-search-engine").value;
+
+    form.addEventListener("submit", (e) => {
+        e.preventDefault();
+        const query = addressInput.value.trim();
+        if (!query) return;
+        // If the input looks like a URL, open via proxy
+        if (/^(https?:\/\/)/i.test(query)) {
+            window.location.href = `/proxy?url=${encodeURIComponent(query)}`;
+        } else {
+            // Otherwise search
+            window.location.href = `/proxy?url=${encodeURIComponent(searchEngine.replace("%s", query))}`;
+        }
     });
 });
 </script>
