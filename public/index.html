@@ -1,11 +1,10 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no" />
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>ZGC Proxy</title>
-
-<link rel="shortcut icon" href="favicon.webp" />
+<link rel="shortcut icon" href="favicon.webp">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
 
@@ -15,7 +14,7 @@
 html, body { height:100%; font-family:'Inter',Arial,sans-serif; overflow:hidden; -webkit-font-smoothing:antialiased; -moz-osx-font-smoothing:grayscale; }
 body { background: linear-gradient(135deg,#0a1e33 0%,#00122d 100%); color:#fff; display:flex; justify-content:center; align-items:center; position:relative; }
 
-/* Particles */
+/* Particles background */
 #particles-js { position:absolute; top:0; left:0; width:100%; height:100%; z-index:-1; }
 
 /* Container */
@@ -64,10 +63,14 @@ body { background: linear-gradient(135deg,#0a1e33 0%,#00122d 100%); color:#fff; 
 .icon-left { left:15px; }
 .icon-right { right:15px; }
 
-/* Logo */
-.logo-wrapper { display:flex; flex-direction:column; align-items:center; margin-bottom:1rem; }
-.logo-wrapper img { width:100px; height:auto; margin-bottom:0.5rem; }
-.logo-wrapper h1 { font-size:3rem; background:linear-gradient(90deg,#00bfff,#1e90ff); -webkit-background-clip:text; -webkit-text-fill-color:transparent; }
+/* Title */
+.search-container h1 {
+    font-size:3rem;
+    margin-bottom:0.5rem;
+    background:linear-gradient(90deg,#00bfff,#1e90ff);
+    -webkit-background-clip:text;
+    -webkit-text-fill-color:transparent;
+}
 
 /* Description */
 .desc { font-size:1.1rem; color:#ccc; margin-bottom:1rem; }
@@ -79,7 +82,7 @@ form { display:flex; justify-content:center; align-items:center; margin-top:1.5r
 .search-btn { padding:0.85rem 1rem; background:#1e90ff; border:none; border-radius:0 10px 10px 0; cursor:pointer; color:#fff; font-size:1.1rem; display:flex; align-items:center; justify-content:center; transition:background 0.3s; }
 .search-btn:hover { background:#00bfff; }
 
-/* Footer minimal */
+/* Footer */
 footer { position:absolute; bottom:10px; width:100%; text-align:center; font-size:0.85rem; color:#888; }
 </style>
 </head>
@@ -91,11 +94,8 @@ footer { position:absolute; bottom:10px; width:100%; text-align:center; font-siz
     <div class="icon-btn icon-left" title="Games" id="games-btn"><i class="fas fa-gamepad"></i></div>
     <div class="icon-btn icon-right" title="Homepage" id="home-btn"><i class="fas fa-home"></i></div>
 
-    <!-- Logo + title -->
-    <div class="logo-wrapper">
-        <img class="logo" src="sj.png" alt="Scramjet" />
-        <h1>ZGC Proxy</h1>
-    </div>
+    <!-- Title -->
+    <h1>ZGC Proxy</h1>
 
     <!-- Description -->
     <div class="desc">
@@ -106,7 +106,6 @@ footer { position:absolute; bottom:10px; width:100%; text-align:center; font-siz
     <form id="sj-form">
         <input id="sj-search-engine" type="hidden" value="https://www.google.com/search?q=%s">
         <input id="sj-address" type="text" placeholder="Enter URL or Search Query">
-        <button type="submit" class="search-btn"><i class="fas fa-magnifying-glass"></i></button>
     </form>
 </div>
 
@@ -114,10 +113,10 @@ footer { position:absolute; bottom:10px; width:100%; text-align:center; font-siz
     <div>Scramjet &copy; MW 2025</div>
 </footer>
 
+<!-- Particles.js -->
 <script src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js"></script>
 <script>
 document.addEventListener("DOMContentLoaded", () => {
-    // Initialize particles
     particlesJS("particles-js", {
         particles: {
             number:{value:100,density:{enable:true,value_area:800}},
@@ -148,6 +147,7 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 </script>
 
+<!-- Scramjet scripts -->
 <script src="/scram/scramjet.all.js"></script>
 <script src="baremux/index.js" defer></script>
 <script src="epoxy/index.js" defer></script>
