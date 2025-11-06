@@ -1,158 +1,148 @@
-<!DOCTYPE html>
-<html lang="en">
+<!doctype html>
+<html>
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no" />
 <title>ZGC Proxy</title>
-<link rel="shortcut icon" href="favicon.webp">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+<link rel="shortcut icon" href="favicon.webp" />
+<link rel="stylesheet" href="index.css" />
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
-
-<style>
-/* Reset & body */
-* { margin:0; padding:0; box-sizing:border-box; }
-html, body { height:100%; font-family:'Inter',Arial,sans-serif; overflow:hidden; -webkit-font-smoothing:antialiased; -moz-osx-font-smoothing:grayscale; }
-body { background: linear-gradient(135deg,#0a1e33 0%,#00122d 100%); color:#fff; display:flex; justify-content:center; align-items:center; position:relative; }
-
-/* Particles background */
-#particles-js { position:absolute; top:0; left:0; width:100%; height:100%; z-index:-1; }
-
-/* Container */
-.search-container {
-    text-align:center;
-    width:90%;
-    max-width:700px;
-    padding:3rem 2rem;
-    border-radius:15px;
-    background: rgba(255,255,255,0.05);
-    backdrop-filter:blur(15px);
-    box-shadow:0 8px 30px rgba(0,0,0,0.5);
-    position:relative;
-}
-
-/* Top corner icons */
-.icon-btn {
-    width:50px;
-    height:50px;
-    background:rgba(255,255,255,0.1);
-    border-radius:50%;
-    display:flex;
-    justify-content:center;
-    align-items:center;
-    color:#00bfff;
-    font-size:1.3rem;
-    transition:all 0.3s;
-    text-decoration:none;
-    box-shadow:0 4px 15px rgba(0,0,0,0.3);
-    position:absolute;
-    top:15px;
-    cursor:pointer;
-}
-.icon-btn::after {
-    content:'';
-    position:absolute;
-    top:-6px; left:-6px; right:-6px; bottom:-6px;
-    border-radius:50%;
-    background:rgba(0,191,255,0.2);
-    filter:blur(8px);
-    opacity:0;
-    transition:opacity 0.3s;
-}
-.icon-btn:hover::after { opacity:1; }
-.icon-btn:hover { background:#00bfff; color:#fff; transform:scale(1.1); }
-.icon-left { left:15px; }
-.icon-right { right:15px; }
-
-/* Title */
-.search-container h1 {
-    font-size:3rem;
-    margin-bottom:0.5rem;
-    background:linear-gradient(90deg,#00bfff,#1e90ff);
-    -webkit-background-clip:text;
-    -webkit-text-fill-color:transparent;
-}
-
-/* Description */
-.desc { font-size:1.1rem; color:#ccc; margin-bottom:1rem; }
-
-/* Form */
-form { display:flex; justify-content:center; align-items:center; margin-top:1.5rem; }
-#sj-address { width:100%; max-width:500px; padding:0.85rem 1rem; font-size:1rem; border-radius:10px 0 0 10px; border:none; outline:none; background-color: rgba(255,255,255,0.1); color:#fff; }
-#sj-address::placeholder { color:#aaa; }
-.search-btn { padding:0.85rem 1rem; background:#1e90ff; border:none; border-radius:0 10px 10px 0; cursor:pointer; color:#fff; font-size:1.1rem; display:flex; align-items:center; justify-content:center; transition:background 0.3s; }
-.search-btn:hover { background:#00bfff; }
-
-/* Footer */
-footer { position:absolute; bottom:10px; width:100%; text-align:center; font-size:0.85rem; color:#888; }
-</style>
-</head>
-<body>
-<div id="particles-js"></div>
-
-<div class="search-container">
-    <!-- Top corner icons -->
-    <div class="icon-btn icon-left" title="Games" id="games-btn"><i class="fas fa-gamepad"></i></div>
-    <div class="icon-btn icon-right" title="Homepage" id="home-btn"><i class="fas fa-home"></i></div>
-
-    <!-- Title -->
-    <h1>ZGC Proxy</h1>
-
-    <!-- Description -->
-    <div class="desc">
-        <p>Surf the unblocked web with the experimental Scramjet proxy.</p>
-    </div>
-
-    <!-- Search form -->
-    <form id="sj-form">
-        <input id="sj-search-engine" type="hidden" value="https://www.google.com/search?q=%s">
-        <input id="sj-address" type="text" placeholder="Enter URL or Search Query">
-    </form>
-</div>
-
-<footer>
-    <div>Scramjet &copy; MW 2025</div>
-</footer>
-
-<!-- Particles.js -->
-<script src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js"></script>
-<script>
-document.addEventListener("DOMContentLoaded", () => {
-    particlesJS("particles-js", {
-        particles: {
-            number:{value:100,density:{enable:true,value_area:800}},
-            color:{value:"#00bfff"},
-            shape:{type:"circle"},
-            opacity:{value:0.5,random:true},
-            size:{value:3,random:true},
-            line_linked:{enable:true,distance:150,color:"#00bfff",opacity:0.3,width:1},
-            move:{enable:true,speed:2,random:true,straight:false,out_mode:"out"}
-        },
-        interactivity:{
-            detect_on:"canvas",
-            events:{onhover:{enable:true,mode:"repulse"},onclick:{enable:true,mode:"push"}},
-            modes:{repulse:{distance:100},push:{particles_nb:4}}
-        },
-        retina_detect:true
-    });
-
-    // Top-corner buttons simulate Scramjet search submission
-    function submitScramjetURL(url){
-        const input=document.getElementById("sj-address");
-        input.value=url;
-        document.getElementById("sj-form").dispatchEvent(new Event('submit',{ cancelable:true, bubbles:true }));
-    }
-
-    document.getElementById("games-btn").addEventListener("click",()=>{ submitScramjetURL("https://zgcv2.netlify.app/project"); });
-    document.getElementById("home-btn").addEventListener("click",()=>{ submitScramjetURL("https://zgcv2.netlify.app/homepage"); });
-});
-</script>
-
-<!-- Scramjet scripts -->
 <script src="/scram/scramjet.all.js"></script>
 <script src="baremux/index.js" defer></script>
 <script src="epoxy/index.js" defer></script>
 <script src="register-sw.js" defer></script>
 <script src="search.js" defer></script>
 <script src="index.js" defer></script>
+
+<style>
+html, body {
+    height: 100%;
+    margin: 0;
+    font-family: 'Inter', Arial, sans-serif;
+    background: linear-gradient(135deg, #0a1e33 0%, #00122d 100%);
+    color: #fff;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+#particles-js {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+}
+
+.logo-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 3rem;
+}
+
+.logo-wrapper h1 {
+    font-size: 3rem;
+    margin-left: 1rem;
+    background: linear-gradient(90deg,#00bfff,#1e90ff);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.desc {
+    text-align: center;
+    font-size: 1.2rem;
+    color: #ccc;
+    margin: 1rem 0 2rem 0;
+    max-width: 600px;
+}
+
+#sj-form {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 2rem;
+    width: 100%;
+}
+
+#sj-address {
+    width: 300px;
+    max-width: 80%;
+    padding: 0.75rem 1rem;
+    font-size: 1rem;
+    border-radius: 10px;
+    border: none;
+    outline: none;
+    background-color: rgba(255,255,255,0.1);
+    color: #fff;
+}
+
+#sj-address::placeholder {
+    color: #aaa;
+}
+
+footer {
+    position: absolute;
+    bottom: 10px;
+    text-align: center;
+    font-size: 0.85rem;
+    color: #888;
+    width: 100%;
+}
+</style>
+</head>
+
+<body>
+<div id="particles-js"></div>
+
+<div class="logo-wrapper">
+    <!-- Removed Scramjet logo image -->
+    <h1>ZGC Proxy</h1>
+</div>
+
+<div class="desc">
+    <p>Browse the internet freely. Powered by Scramjet</p>
+</div>
+
+<form id="sj-form">
+    <input id="sj-search-engine" value="https://www.google.com/search?q=%s" type="hidden" />
+    <input id="sj-address" type="text" placeholder="Search the web freely" />
+</form>
+
+<div class="desc">
+    <p id="sj-error"></p>
+    <pre id="sj-error-code"></pre>
+</div>
+
+<footer>
+    <div>
+        <span>ZGC Proxy &copy; 2025</span>
+    </div>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js"></script>
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+    particlesJS("particles-js", {
+        particles: {
+            number: { value: 80, density: { enable: true, value_area: 800 } },
+            color: { value: "#00bfff" },
+            shape: { type: "circle" },
+            opacity: { value: 0.5, random: true },
+            size: { value: 3, random: true },
+            line_linked: { enable: true, distance: 150, color: "#00bfff", opacity: 0.3, width: 1 },
+            move: { enable: true, speed: 2, random: true, straight: false, out_mode: "out" }
+        },
+        interactivity: {
+            detect_on: "canvas",
+            events: { onhover: { enable: true, mode: "repulse" }, onclick: { enable: true, mode: "push" } },
+            modes: { repulse: { distance: 100 }, push: { particles_nb: 4 } }
+        },
+        retina_detect: true
+    });
+});
+</script>
 </body>
 </html>
