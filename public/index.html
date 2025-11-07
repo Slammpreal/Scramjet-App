@@ -166,6 +166,32 @@ footer {
     height: 120px;
   }
 }
+
+/* --- Added Fixes for Visibility and Weight --- */
+
+/* Ensure text inside the main box is visible white */
+#main-page-content h1, 
+#main-page-content h2, 
+#main-page-content input {
+    color: var(--text-color) !important;
+}
+
+/* Ensure the input background is correctly transparent on load */
+#sj-address {
+    background: none !important;
+}
+
+/* Override potential browser default margins/padding that conflict with the box height */
+#main-page-content h1 {
+    font-size: 30px;
+    font-weight: 500;
+}
+
+/* Adjust margin on the description text */
+.main-desc {
+    margin-top: 5px !important;
+    margin-bottom: 25px !important;
+}
 </style>
 </head>
 <body>
@@ -185,7 +211,7 @@ footer {
                 <input id="sj-address" type="text" placeholder="Enter URL or Search Query" autocomplete="off" class="main-input" />
             </form>
             
-            <div class="desc" style="margin-top: 5px;">
+            <div style="margin-top: 5px;"> 
                 <p id="sj-error"></p>
                 <pre id="sj-error-code"></pre>
             </div>
