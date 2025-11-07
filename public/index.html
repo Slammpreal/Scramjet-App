@@ -27,7 +27,7 @@
   --accent-gradient: linear-gradient(90deg,#00bfff,#1e90ff);
 }
 
-/* --- Base Styles (ZGC) --- */
+/* --- Base Styles --- */
 html, body {
   height: 100%;
   margin: 0;
@@ -58,7 +58,7 @@ footer {
   width: 100%;
 }
 
-/* --- Ludicrous (Source) Styles Applied --- */
+/* --- Ludicrous Styles Applied --- */
 
 .main {
   background: none;
@@ -74,14 +74,8 @@ footer {
   font-family: Roboto, sans-serif;
 }
 
-/* Targets the input on your ZGC page using its new class */
-.main-input::placeholder {
-  color: var(--text-color);
-  opacity: 0.8;
-}
-
+/* This is the centered, transparent box */
 #main-page-content {
-  /* This is the centered, transparent box */
   padding: 30px 50px;
   border: 2px solid var(--page-border-color);
   border-radius: 6px;
@@ -106,7 +100,7 @@ footer {
   margin-bottom: 10px;
 }
 
-/* Title Styling (ZGC Proxy) */
+/* Title Styling */
 .main-title {
   color: var(--text-color);
   font-size: 30px;
@@ -126,28 +120,6 @@ footer {
   margin-top: 10px;
 }
 
-/* INPUT FIELD STYLES (Targets .main-input which is on #sj-address) */
-.main-input {
-  width: calc(100% - 24px);
-  padding: 10px;
-  background: none;
-  border: var(--text-color) solid 3px;
-  border-radius: 3px;
-  color: var(--text-color);
-  margin-bottom: 2px;
-  outline: none;
-  transition: 0.25s ease;
-  font-size: 1rem;
-}
-
-.main-input:focus, .main-input:hover {
-  background: rgb(255, 255, 255, 0.1);
-}
-
-#sj-form {
-  position: relative;
-}
-
 /* Error messages */
 #sj-error, #sj-error-code {
   color: #ff6b6b;
@@ -157,6 +129,49 @@ footer {
   word-break: break-word;
 }
 
+/* --- FORCED INPUT FIELD STYLES (Targets #sj-address directly - FINAL FIX for width and border) --- */
+#sj-address {
+  width: calc(100% - 24px) !important;
+  max-width: 100% !important; 
+  padding: 10px !important;
+  background: none !important; 
+  border: var(--text-color) solid 3px !important; 
+  border-radius: 3px !important;
+  color: var(--text-color) !important;
+  margin-bottom: 2px !important;
+  outline: none !important;
+  transition: 0.25s ease !important;
+  font-size: 1rem !important;
+  display: block !important; 
+}
+
+#sj-address::placeholder {
+  color: var(--text-color) !important;
+  opacity: 0.8 !important;
+}
+
+#sj-address:focus, #sj-address:hover {
+  background: rgb(255, 255, 255, 0.1) !important;
+}
+
+#sj-form {
+  position: relative;
+}
+
+/* --- FIX: HIDE UNWANTED FLOATING POP-UPS/IFRAMES --- */
+/* Hides iframes often used for search suggestions (targets the tiny floating box) */
+iframe[style*="top"]:not([id*="particles"]) {
+    display: none !important;
+    visibility: hidden !important;
+}
+
+/* Hides any small, absolutely positioned div pop-up */
+div[style*="height"][style*="width"][style*="position"]:not([id*="particles"]) {
+    max-width: 50px !important;
+    max-height: 50px !important;
+    overflow: hidden !important;
+    opacity: 0 !important; 
+}
 
 /* Responsive adjustments */
 @media (max-width: 768px) {
@@ -165,32 +180,6 @@ footer {
     padding: 20px 30px;
     height: 120px;
   }
-}
-
-/* --- Added Fixes for Visibility and Weight --- */
-
-/* Ensure text inside the main box is visible white */
-#main-page-content h1, 
-#main-page-content h2, 
-#main-page-content input {
-    color: var(--text-color) !important;
-}
-
-/* Ensure the input background is correctly transparent on load */
-#sj-address {
-    background: none !important;
-}
-
-/* Override potential browser default margins/padding that conflict with the box height */
-#main-page-content h1 {
-    font-size: 30px;
-    font-weight: 500;
-}
-
-/* Adjust margin on the description text */
-.main-desc {
-    margin-top: 5px !important;
-    margin-bottom: 25px !important;
 }
 </style>
 </head>
@@ -208,7 +197,7 @@ footer {
             <form id="sj-form" action="/" style="position: relative;">
                 <input id="sj-search-engine" value="https://www.google.com/search?q=%s" type="hidden" />
                 
-                <input id="sj-address" type="text" placeholder="Enter URL or Search Query" autocomplete="off" class="main-input" />
+                <input id="sj-address" type="text" placeholder="Enter URL or Search Query" autocomplete="off" />
             </form>
             
             <div style="margin-top: 5px;"> 
@@ -227,7 +216,6 @@ footer {
 <script src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js"></script>
 <script>
 document.addEventListener("DOMContentLoaded", () => {
-    // The particle configuration from your original ZGC file
     particlesJS("particles-js", {
         particles: { 
             number: { value: 80, density: { enable: true, value_area: 800 } }, 
