@@ -120,7 +120,7 @@ footer {
   margin-top: 10px;
 }
 
-/* Error messages */
+/* Error messages that we WANT to display */
 #sj-error, #sj-error-code {
   color: #ff6b6b;
   font-size: 0.9rem;
@@ -129,8 +129,10 @@ footer {
   word-break: break-word;
 }
 
-/* --- FORCED INPUT FIELD STYLES (Targets #sj-address directly - FINAL FIX for width and border) --- */
+
+/* --- FORCED INPUT FIELD STYLES (FINAL FIX for width and border) --- */
 #sj-address {
+  /* Set background/color/border on the element itself */
   width: calc(100% - 24px) !important;
   max-width: 100% !important; 
   padding: 10px !important;
@@ -158,20 +160,26 @@ footer {
   position: relative;
 }
 
-/* --- FIX: HIDE UNWANTED FLOATING POP-UPS/IFRAMES --- */
-/* Hides iframes often used for search suggestions (targets the tiny floating box) */
-iframe[style*="top"]:not([id*="particles"]) {
+/* --- AGGRESSIVE FIX: HIDE ALL UNWANTED FLOATING POP-UPS/IFRAMES --- */
+/* 1. Hides elements with absolute or fixed positioning and small sizes (common for popups) */
+*[style*="position:absolute"], *[style*="position:fixed"] {
+    /* Exclude the necessary main elements that use absolute positioning */
+    display: initial; /* Default behavior */
+    opacity: 1;
+}
+
+/* Now, forcefully hide any iframe that is NOT the particles background */
+iframe:not(#particles-js canvas) {
     display: none !important;
     visibility: hidden !important;
 }
 
-/* Hides any small, absolutely positioned div pop-up */
+/* Also hide any small, absolutely positioned div pop-up */
 div[style*="height"][style*="width"][style*="position"]:not([id*="particles"]) {
-    max-width: 50px !important;
-    max-height: 50px !important;
-    overflow: hidden !important;
-    opacity: 0 !important; 
+    display: none !important;
+    visibility: hidden !important;
 }
+
 
 /* Responsive adjustments */
 @media (max-width: 768px) {
