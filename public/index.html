@@ -17,79 +17,96 @@
 
 <style>
 html, body {
-    height: 100%;
-    margin: 0;
-    font-family: 'Inter', Arial, sans-serif;
-    background: linear-gradient(135deg, #0a1e33 0%, #00122d 100%);
-    color: #fff;
-    overflow: hidden;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+  height: 100%;
+  margin: 0;
+  font-family: 'Inter', Arial, sans-serif;
+  background: radial-gradient(circle at top, #041830 0%, #000c1f 100%);
+  color: #fff;
+  overflow: hidden;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 #particles-js {
-    position: fixed;
-    top: 0; left: 0;
-    width: 100%;
-    height: 100%;
-    z-index: -1;
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -1;
 }
 
-.logo-wrapper {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin-top: 3rem;
+/* Main container */
+.proxy-box {
+  background: rgba(10, 20, 40, 0.6);
+  border: 1px solid rgba(0, 255, 255, 0.15);
+  backdrop-filter: blur(15px);
+  box-shadow: 0 0 25px rgba(0, 191, 255, 0.1);
+  border-radius: 15px;
+  padding: 2.5rem 3rem;
+  text-align: center;
+  width: 90%;
+  max-width: 480px;
+  animation: fadeIn 1.2s ease;
 }
 
-.logo-wrapper h1 {
-    font-size: 3rem;
-    margin-left: 1rem;
-    background: linear-gradient(90deg,#00bfff,#1e90ff);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
-.desc {
-    text-align: center;
-    font-size: 1.2rem;
-    color: #ccc;
-    margin: 1rem 0 2rem 0;
-    max-width: 600px;
+.proxy-title {
+  font-size: 2rem;
+  font-weight: 700;
+  background: linear-gradient(90deg, #00e6ff, #007bff);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  margin-bottom: 0.5rem;
+}
+
+.proxy-desc {
+  color: #a0b8d6;
+  font-size: 1rem;
+  margin-bottom: 1.5rem;
 }
 
 #sj-form {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    margin-bottom: 2rem;
-    width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
 }
 
 #sj-address {
-    width: 300px;
-    max-width: 80%;
-    padding: 0.75rem 1rem;
-    font-size: 1rem;
-    border-radius: 10px;
-    border: none;
-    outline: none;
-    background-color: rgba(255,255,255,0.1);
-    color: #fff;
+  width: 100%;
+  padding: 0.8rem 1rem;
+  font-size: 0.95rem;
+  border-radius: 10px;
+  border: 1px solid rgba(255,255,255,0.1);
+  outline: none;
+  background: rgba(255, 255, 255, 0.05);
+  color: #fff;
+  transition: all 0.3s ease;
+}
+
+#sj-address:focus {
+  border-color: rgba(0, 200, 255, 0.6);
+  background: rgba(255,255,255,0.08);
+  box-shadow: 0 0 8px rgba(0, 200, 255, 0.2);
 }
 
 #sj-address::placeholder {
-    color: #aaa;
+  color: #8aa4c0;
 }
 
 footer {
-    position: absolute;
-    bottom: 10px;
-    text-align: center;
-    font-size: 0.85rem;
-    color: #888;
-    width: 100%;
+  position: fixed;
+  bottom: 15px;
+  text-align: center;
+  font-size: 0.85rem;
+  color: #6f87a5;
+  width: 100%;
+  opacity: 0.8;
 }
 </style>
 </head>
@@ -97,51 +114,45 @@ footer {
 <body>
 <div id="particles-js"></div>
 
-<div class="logo-wrapper">
-    <!-- Removed Scramjet logo image -->
-    <h1>ZGC Proxy</h1>
-</div>
+<div class="proxy-box">
+  <h1 class="proxy-title">ZGC Proxy</h1>
+  <p class="proxy-desc">Browse the internet freely — powered by <strong>Scramjet</strong>.</p>
 
-<div class="desc">
-    <p>Browse the internet freely. Powered by Scramjet</p>
-</div>
-
-<form id="sj-form">
+  <form id="sj-form">
     <input id="sj-search-engine" value="https://www.google.com/search?q=%s" type="hidden" />
-    <input id="sj-address" type="text" placeholder="Search the web freely" />
-</form>
+    <input id="sj-address" type="text" placeholder="Enter a URL or search term..." />
+  </form>
 
-<div class="desc">
+  <div class="desc">
     <p id="sj-error"></p>
     <pre id="sj-error-code"></pre>
+  </div>
 </div>
 
 <footer>
-    <div>
-        <span>ZGC Proxy &copy; 2025</span>
-    </div>
+  ZGC Proxy © 2025
 </footer>
 
 <script src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js"></script>
 <script>
 document.addEventListener("DOMContentLoaded", () => {
-    particlesJS("particles-js", {
-        particles: {
-            number: { value: 80, density: { enable: true, value_area: 800 } },
-            color: { value: "#00bfff" },
-            shape: { type: "circle" },
-            opacity: { value: 0.5, random: true },
-            size: { value: 3, random: true },
-            line_linked: { enable: true, distance: 150, color: "#00bfff", opacity: 0.3, width: 1 },
-            move: { enable: true, speed: 2, random: true, straight: false, out_mode: "out" }
-        },
-        interactivity: {
-            detect_on: "canvas",
-            events: { onhover: { enable: true, mode: "repulse" }, onclick: { enable: true, mode: "push" } },
-            modes: { repulse: { distance: 100 }, push: { particles_nb: 4 } }
-        },
-        retina_detect: true
-    });
+  particlesJS("particles-js", {
+    particles: {
+      number: { value: 60, density: { enable: true, value_area: 800 } },
+      color: { value: "#00e6ff" },
+      shape: { type: "circle" },
+      opacity: { value: 0.4, random: true },
+      size: { value: 2.5, random: true },
+      line_linked: { enable: true, distance: 140, color: "#00bfff", opacity: 0.25, width: 1 },
+      move: { enable: true, speed: 1.5, random: true, straight: false, out_mode: "out" }
+    },
+    interactivity: {
+      detect_on: "canvas",
+      events: { onhover: { enable: true, mode: "repulse" }, onclick: { enable: true, mode: "push" } },
+      modes: { repulse: { distance: 90 }, push: { particles_nb: 3 } }
+    },
+    retina_detect: true
+  });
 });
 </script>
 </body>
