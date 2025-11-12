@@ -8,10 +8,8 @@
 <link rel="shortcut icon" href="favicon.webp" />
 <link rel="stylesheet" href="index.css" />
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
-<!-- Font Awesome for icons (Back/Forward, Home) -->
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"> 
 
-<!-- SCRIPTS: Kept all your original scripts -->
 <script src="/scram/scramjet.all.js"></script>
 <script src="baremux/index.js" defer></script>
 <script src="epoxy/index.js" defer></script>
@@ -200,21 +198,19 @@ header {
 <body>
 <div id="particles-js"></div>
 
-<!-- NAVIGATION BAR -->
 <header>
     <div class="nav-buttons">
         <button class="nav-btn" id="back-btn" title="Back">
-          <i class="fas fa-arrow-left"></i>
+            <i class="fas fa-arrow-left"></i>
         </button>
         <button class="nav-btn" id="forward-btn" title="Forward">
-          <i class="fas fa-arrow-right"></i>
+            <i class="fas fa-arrow-right"></i>
         </button>
         <button class="nav-btn" id="home-btn" title="Home">
-          <i class="fas fa-home"></i>
+            <i class="fas fa-home"></i>
         </button>
     </div>
     
-    <!-- Proxy Input in the Header -->
     <form id="sj-form" class="header-search-form">
         <input id="sj-search-engine" value="https://www.google.com/search?q=%s" type="hidden" />
         <input type="text" id="sj-address" placeholder="Search or enter URL..." />
@@ -222,20 +218,14 @@ header {
     
     <div class="header-right-spacer"></div>
 </header>
-<!-- END NAVIGATION BAR -->
-
-<!-- IFRAME to load proxied content into -->
 <iframe id="proxy-frame"></iframe>
 
-<!-- HOME SCREEN -->
 <div id="home-screen">
     <h1>ZGC Proxy</h1>
     <p>Browse freely through the internet — powered by Scramjet</p>
     
-    <!-- HOME SCREEN SEARCH BAR -->
     <input id="home-search" placeholder="Enter URL or Search Query..." />
 
-    <!-- NEW: Additional Buttons -->
     <div class="home-buttons-container">
         <button class="home-link-btn" id="homepage-btn">Go to Homepage</button>
         <button class="home-link-btn" id="about-btn">About</button>
@@ -276,19 +266,28 @@ document.addEventListener("DOMContentLoaded", () => {
         headerSearchInput.value = ''; // Clear header bar on home return
     }
     
-    // --- Event Listeners for Search and Home ---
+    // --- Event Listeners for Search and Home (FIXED) ---
     
     // 1. Submit from Header Bar (#sj-form)
     sjForm.addEventListener("submit", (e) => {
-        setTimeout(showProxyView, 50); 
+        e.preventDefault(); 
+        if (typeof Scramjet !== 'undefined' && headerSearchInput.value) {
+            Scramjet.open(headerSearchInput.value);
+            showProxyView();
+        }
     });
 
-    // 2. Submit from Home Search Input (#home-search)
+    // 2. Submit from Home Search Input (#home-search) - FIXED FUNCTION
     function submitHomeSearch(event) {
         if (event.key === "Enter") {
-            headerSearchInput.value = homeSearchInput.value;
-            sjForm.submit(); 
-            setTimeout(showProxyView, 50); 
+            const query = homeSearchInput.value;
+            if (typeof Scramjet !== 'undefined' && query) {
+                // Update header input for visual consistency
+                headerSearchInput.value = query; 
+                
+                Scramjet.open(query);
+                showProxyView();
+            }
         }
     }
     homeSearchInput.addEventListener("keydown", submitHomeSearch);
@@ -298,21 +297,23 @@ document.addEventListener("DOMContentLoaded", () => {
     
     // 4. Back/Forward 
     document.getElementById("back-btn").addEventListener("click", () => {
-         proxyFrame.contentWindow.history.back(); 
+        if (proxyFrame.style.display === 'block' && proxyFrame.contentWindow) {
+            proxyFrame.contentWindow.history.back(); 
+        }
     });
     document.getElementById("forward-btn").addEventListener("click", () => {
-         proxyFrame.contentWindow.history.forward();
+        if (proxyFrame.style.display === 'block' && proxyFrame.contentWindow) {
+            proxyFrame.contentWindow.history.forward();
+        }
     });
     
     // 5. NEW: Homepage Button
     homepageBtn.addEventListener("click", () => {
-        // Navigates the entire browser window to the specified URL
         window.location.href = 'https://zgcv2.netlify.app/homepage';
     });
 
     // 6. NEW: About Button
     aboutBtn.addEventListener("click", () => {
-        // Navigates the entire browser window to the specified URL
         window.location.href = 'https://zgcv2.netlify.app/slammp';
     });
     
