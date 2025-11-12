@@ -1,12 +1,11 @@
 <!doctype html>
-<html>
+<html lang="en-US">
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no" />
 <title>ZGC Proxy</title>
 
 <link rel="shortcut icon" href="favicon.webp" />
-<link rel="stylesheet" href="index.css" />
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
 <script src="/scram/scramjet.all.js"></script>
 <script src="baremux/index.js" defer></script>
@@ -16,12 +15,21 @@
 <script src="index.js" defer></script>
 
 <style>
+:root {
+  --bg-color: #0a0f1a;
+  --nav-color: rgba(0,0,0,0.4);
+  --input-color: rgba(255,255,255,0.1);
+  --accent-color: #aad4ff;
+  --text-color: #fff;
+  --shadow-color: rgba(0,0,0,0.5);
+}
+
 html, body {
   height: 100%;
   margin: 0;
   font-family: 'Inter', Arial, sans-serif;
-  background: radial-gradient(circle at top, #041830 0%, #000c1f 100%);
-  color: #fff;
+  background-color: var(--bg-color);
+  color: var(--text-color);
   overflow: hidden;
   display: flex;
   justify-content: center;
@@ -36,17 +44,17 @@ html, body {
   z-index: -1;
 }
 
-/* Main container */
+/* Proxy box styling */
 .proxy-box {
-  background: rgba(10, 20, 40, 0.6);
-  border: 1px solid rgba(0, 255, 255, 0.15);
-  backdrop-filter: blur(15px);
-  box-shadow: 0 0 25px rgba(0, 191, 255, 0.1);
+  background: rgba(10,20,40,0.6);
   border-radius: 15px;
-  padding: 2.5rem 3rem;
+  border: 1px solid rgba(170,212,255,0.2);
+  backdrop-filter: blur(15px);
+  box-shadow: 0 0 25px rgba(170,212,255,0.1);
+  padding: 3rem 3.5rem;
   text-align: center;
   width: 90%;
-  max-width: 480px;
+  max-width: 500px;
   animation: fadeIn 1.2s ease;
 }
 
@@ -56,9 +64,9 @@ html, body {
 }
 
 .proxy-title {
-  font-size: 2rem;
-  font-weight: 700;
-  background: linear-gradient(90deg, #00e6ff, #007bff);
+  font-size: 2.2rem;
+  font-weight: 800;
+  background: linear-gradient(90deg, #aad4ff, #00bfff);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   margin-bottom: 0.5rem;
@@ -79,20 +87,21 @@ html, body {
 
 #sj-address {
   width: 100%;
-  padding: 0.8rem 1rem;
-  font-size: 0.95rem;
-  border-radius: 10px;
-  border: 1px solid rgba(255,255,255,0.1);
+  padding: 0.9rem 1.2rem;
+  font-size: 1em;
+  border-radius: 12px;
+  border: 1px solid rgba(255,255,255,0.15);
   outline: none;
-  background: rgba(255, 255, 255, 0.05);
-  color: #fff;
+  background: var(--input-color);
+  color: var(--text-color);
+  box-shadow: 0 4px 10px var(--shadow-color) inset;
   transition: all 0.3s ease;
 }
 
 #sj-address:focus {
-  border-color: rgba(0, 200, 255, 0.6);
-  background: rgba(255,255,255,0.08);
-  box-shadow: 0 0 8px rgba(0, 200, 255, 0.2);
+  border-color: var(--accent-color);
+  background: rgba(255,255,255,0.12);
+  box-shadow: 0 0 12px rgba(170,212,255,0.2);
 }
 
 #sj-address::placeholder {
@@ -107,6 +116,23 @@ footer {
   color: #6f87a5;
   width: 100%;
   opacity: 0.8;
+}
+
+/* Button/Link styling (optional for future enhancements) */
+button, .home-link {
+  cursor: pointer;
+  background: var(--accent-color);
+  border: none;
+  color: var(--bg-color);
+  padding: 10px 20px;
+  font-size: 0.9em;
+  border-radius: 10px;
+  text-decoration: none;
+  transition: 0.2s;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.4);
+}
+button:hover, .home-link:hover {
+  box-shadow: 0 0 15px var(--accent-color);
 }
 </style>
 </head>
@@ -139,7 +165,7 @@ document.addEventListener("DOMContentLoaded", () => {
   particlesJS("particles-js", {
     particles: {
       number: { value: 60, density: { enable: true, value_area: 800 } },
-      color: { value: "#00e6ff" },
+      color: { value: "#aad4ff" },
       shape: { type: "circle" },
       opacity: { value: 0.4, random: true },
       size: { value: 2.5, random: true },
