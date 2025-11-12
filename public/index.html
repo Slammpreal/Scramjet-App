@@ -18,7 +18,6 @@
 <script src="index.js" defer></script> 
 
 <style>
-/* --- STYLES (NO CHANGES HERE FROM LAST RESPONSE) --- */
 html, body {
     margin: 0;
     padding: 0;
@@ -38,6 +37,7 @@ html, body {
     z-index: 0;
 }
 
+/* Header Styling (Navigation Bar) */
 header {
     position: fixed;
     top: 0;
@@ -50,7 +50,7 @@ header {
     align-items: center;
     justify-content: space-between;
     padding: 0 14px;
-    z-index: 5;
+    z-index: 5; /* Z-index is 5 so it sits above the iframe/home screen */
     border-bottom: 1px solid rgba(255, 255, 255, 0.1);
 }
 
@@ -109,6 +109,7 @@ header {
     visibility: hidden;
 }
 
+/* Home Screen Styling (Simple centered view) */
 #home-screen {
     position: absolute;
     top: 50px; 
@@ -120,7 +121,7 @@ header {
     align-items: center;
     justify-content: center;
     text-align: center;
-    z-index: 2;
+    z-index: 2; /* Z-index is 2 so it sits above the iframe when visible */
 }
 
 #home-screen h1 {
@@ -134,7 +135,7 @@ header {
     margin-bottom: 25px;
 }
 
-/* NEW STYLES for the central search bar */
+/* Styles for the central search bar */
 #home-search {
     width: 70%;
     max-width: 600px;
@@ -151,6 +152,19 @@ header {
 
 #home-search:focus {
     background: rgba(255, 255, 255, 0.25);
+}
+
+/* Styles for the new iframe */
+#proxy-frame {
+    position: absolute;
+    top: 50px; /* Start below the header */
+    left: 0;
+    width: 100%;
+    height: calc(100% - 50px);
+    border: none;
+    z-index: 1; /* Z-index is 1, below the header and the home screen */
+    background: #0a0f1a;
+    display: none; /* Initially hidden */
 }
 </style>
 </head>
@@ -178,6 +192,8 @@ header {
     
     <div class="header-right-spacer"></div>
 </header>
+<iframe id="proxy-frame"></iframe>
+
 <div id="home-screen">
     <h1>ZGC Proxy</h1>
     <p>Browse freely through the internet — powered by Scramjet</p>
@@ -192,9 +208,62 @@ header {
 
 <script src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js"></script>
 <script>
-// Particle initialization for the background
 document.addEventListener("DOMContentLoaded", () => {
-    // --- PARTICLE JS SETUP ---
+    
+    const homeScreen = document.getElementById("home-screen");
+    const proxyFrame = document.getElementById("proxy-frame");
+    const homeSearchInput = document.getElementById("home-search");
+    const headerSearchInput = document.getElementById("sj-address");
+    const sjForm = document.getElementById("sj-form");
+
+    // --- Core Logic to Show/Hide Screens ---
+    
+    // Function to hide home screen and show iframe
+    function showProxyView() {
+        homeScreen.style.display = 'none';
+        proxyFrame.style.display = 'block';
+    }
+
+    // Function to show home screen and hide iframe
+    function showHomeView() {
+        homeScreen.style.display = 'flex';
+        proxyFrame.style.display = 'none';
+        headerSearchInput.value = ''; // Clear header bar on home return
+    }
+    
+    // --- Event Listeners for Search and Home ---
+
+    // 1. Submit from Header Bar (#sj-form)
+    sjForm.addEventListener("submit", (e) => {
+        // Since the main form is submitted, we assume a search has begun
+        showProxyView();
+    });
+
+    // 2. Submit from Home Search Input (#home-search)
+    function submitHomeSearch(event) {
+        if (event.key === "Enter") {
+            // Transfer the value from the home search input to the header search input (sj-address)
+            headerSearchInput.value = homeSearchInput.value;
+            // Now, manually submit the main form to trigger your proxy scripts
+            sjForm.dispatchEvent(new Event('submit')); 
+            showProxyView(); // Immediately hide the home screen
+        }
+    }
+    homeSearchInput.addEventListener("keydown", submitHomeSearch);
+    
+    // 3. Home Button
+    document.getElementById("home-btn").addEventListener("click", showHomeView);
+    
+    // 4. Back/Forward (Simplified - depends on your index.js)
+    document.getElementById("back-btn").addEventListener("click", () => {
+         // Assuming this works with your proxy's history
+         proxyFrame.contentWindow.history.back(); 
+    });
+    document.getElementById("forward-btn").addEventListener("click", () => {
+         proxyFrame.contentWindow.history.forward();
+    });
+    
+    // --- Particle JS Setup ---
     particlesJS("particles-js", {
         particles: {
             number: { value: 75, density: { enable: true, value_area: 800 } },
@@ -220,24 +289,6 @@ document.addEventListener("DOMContentLoaded", () => {
         },
         retina_detect: true
     });
-
-    // --- NEW FUNCTIONALITY: Linking home-search to the main form ---
-    const homeSearchInput = document.getElementById("home-search");
-    const headerSearchInput = document.getElementById("sj-address");
-    const sjForm = document.getElementById("sj-form");
-
-    // Function to submit the main form using a value from the home search input
-    function submitHomeSearch(event) {
-        if (event.key === "Enter") {
-            // Transfer the value from the home search input to the header search input (sj-address)
-            headerSearchInput.value = homeSearchInput.value;
-            // Trigger the form submission (which your original index.js should catch)
-            sjForm.dispatchEvent(new Event('submit')); 
-        }
-    }
-
-    // Add event listener to the new home search input
-    homeSearchInput.addEventListener("keydown", submitHomeSearch);
 });
 </script>
 </body>
