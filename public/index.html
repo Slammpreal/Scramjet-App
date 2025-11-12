@@ -6,8 +6,7 @@
 <title>ZGC Proxy</title>
 
 <link rel="shortcut icon" href="favicon.webp" />
-<link rel="stylesheet" href="index.css" />
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"> 
 
 <script src="/scram/scramjet.all.js"></script>
@@ -18,13 +17,23 @@
 <script src="index.js" defer></script> 
 
 <style>
+/* CSS Variables from your Homepage for consistency */
+:root {
+    --bg-color: #0a0f1a;
+    --nav-color: rgba(0, 0, 0, 0.4);
+    --text-color: #ffffff;
+    --accent-color: #aad4ff;
+    --input-color: rgba(255, 255, 255, 0.1);
+    --shadow-color: rgba(0, 0, 0, 0.5);
+}
+
 html, body {
     margin: 0;
     padding: 0;
     height: 100%;
     font-family: 'Inter', Arial, sans-serif;
-    background: #0a0f1a; 
-    color: white;
+    background: var(--bg-color); 
+    color: var(--text-color);
     overflow: hidden;
 }
 
@@ -44,7 +53,7 @@ header {
     left: 0;
     right: 0;
     height: 50px;
-    background: rgba(0, 0, 0, 0.4); 
+    background: var(--nav-color); 
     backdrop-filter: blur(10px);
     display: flex;
     align-items: center;
@@ -62,7 +71,7 @@ header {
 .nav-btn {
     background: none;
     border: none;
-    color: #aad4ff; 
+    color: var(--accent-color); 
     cursor: pointer;
     display: flex;
     align-items: center;
@@ -74,8 +83,8 @@ header {
 }
 
 .nav-btn:hover {
-    background: rgba(255, 255, 255, 0.1);
-    color: white;
+    background: var(--input-color);
+    color: var(--text-color);
 }
 
 .header-search-form {
@@ -94,8 +103,8 @@ header {
     border-radius: 8px;
     border: none;
     outline: none;
-    background: rgba(255, 255, 255, 0.1);
-    color: white;
+    background: var(--input-color);
+    color: var(--text-color);
     font-size: 14px;
     transition: 0.2s;
 }
@@ -127,7 +136,7 @@ header {
 #home-screen h1 {
     font-size: 2.2em;
     margin-bottom: 10px;
-    color: #aad4ff;
+    color: var(--accent-color);
 }
 
 #home-screen p {
@@ -145,17 +154,17 @@ header {
     border-radius: 10px;
     outline: none;
     background: rgba(255, 255, 255, 0.15);
-    color: white;
+    color: var(--text-color);
     backdrop-filter: blur(8px);
     transition: 0.2s;
-    margin-bottom: 20px; /* Space below search bar */
+    margin-bottom: 20px; 
 }
 
 #home-search:focus {
     background: rgba(255, 255, 255, 0.25);
 }
 
-/* NEW STYLES for the additional buttons */
+/* Styles for the additional buttons */
 .home-buttons-container {
     display: flex;
     gap: 15px;
@@ -163,10 +172,10 @@ header {
 }
 
 .home-link-btn {
-    background: #1a233b; /* Darker blue background */
-    color: #aad4ff;
+    background: rgba(255, 255, 255, 0.1); 
+    color: var(--accent-color);
     padding: 10px 20px;
-    border: 1px solid #aad4ff55;
+    border: 1px solid var(--accent-color);
     border-radius: 8px;
     cursor: pointer;
     font-size: 15px;
@@ -175,9 +184,9 @@ header {
 }
 
 .home-link-btn:hover {
-    background: #253353; /* Lighter on hover */
+    background: rgba(255, 255, 255, 0.15);
     transform: translateY(-2px);
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
 }
 
 
@@ -227,8 +236,8 @@ header {
     <input id="home-search" placeholder="Enter URL or Search Query..." />
 
     <div class="home-buttons-container">
-        <button class="home-link-btn" id="homepage-btn">Go to Homepage</button>
-        <button class="home-link-btn" id="about-btn">About</button>
+        <a href="/homepage"><button class="home-link-btn">Go to Homepage</button></a>
+        <a href="/slammp"><button class="home-link-btn">About</button></a>
     </div>
 
     <div class="desc">
@@ -247,10 +256,6 @@ document.addEventListener("DOMContentLoaded", () => {
     const headerSearchInput = document.getElementById("sj-address");
     const sjForm = document.getElementById("sj-form");
     
-    // NEW BUTTON REFERENCES
-    const homepageBtn = document.getElementById("homepage-btn");
-    const aboutBtn = document.getElementById("about-btn");
-
     // --- Core Logic to Show/Hide Screens ---
     
     // Function to hide home screen and show iframe
@@ -266,7 +271,7 @@ document.addEventListener("DOMContentLoaded", () => {
         headerSearchInput.value = ''; // Clear header bar on home return
     }
     
-    // --- Event Listeners for Search and Home (FIXED) ---
+    // --- Event Listeners for Search and Home (FIXES APPLIED HERE) ---
     
     // 1. Submit from Header Bar (#sj-form)
     sjForm.addEventListener("submit", (e) => {
@@ -277,8 +282,8 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     });
 
-    // 2. Submit from Home Search Input (#home-search) - FIXED FUNCTION
-    function submitHomeSearch(event) {
+    // 2. Submit from Home Search Input (#home-search) - FIXED: Now works on Enter key.
+    homeSearchInput.addEventListener("keydown", (event) => {
         if (event.key === "Enter") {
             const query = homeSearchInput.value;
             if (typeof Scramjet !== 'undefined' && query) {
@@ -289,32 +294,24 @@ document.addEventListener("DOMContentLoaded", () => {
                 showProxyView();
             }
         }
-    }
-    homeSearchInput.addEventListener("keydown", submitHomeSearch);
+    });
     
-    // 3. Home Button (inside the navigation bar)
+    // 3. Home Button (inside the navigation bar) - FIXED: Now calls showHomeView
     document.getElementById("home-btn").addEventListener("click", showHomeView);
     
-    // 4. Back/Forward 
+    // 4. Back/Forward Buttons - FIXED: Now manipulate the iframe's history object.
     document.getElementById("back-btn").addEventListener("click", () => {
+        // Only attempt to navigate if the proxy frame is visible
         if (proxyFrame.style.display === 'block' && proxyFrame.contentWindow) {
             proxyFrame.contentWindow.history.back(); 
         }
     });
+    
     document.getElementById("forward-btn").addEventListener("click", () => {
+        // Only attempt to navigate if the proxy frame is visible
         if (proxyFrame.style.display === 'block' && proxyFrame.contentWindow) {
             proxyFrame.contentWindow.history.forward();
         }
-    });
-    
-    // 5. NEW: Homepage Button
-    homepageBtn.addEventListener("click", () => {
-        window.location.href = 'https://zgcv2.netlify.app/homepage';
-    });
-
-    // 6. NEW: About Button
-    aboutBtn.addEventListener("click", () => {
-        window.location.href = 'https://zgcv2.netlify.app/slammp';
     });
     
     // --- Particle JS Setup ---
