@@ -8,8 +8,10 @@
 <link rel="shortcut icon" href="favicon.webp" />
 <link rel="stylesheet" href="index.css" />
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+<!-- Font Awesome for icons (Back/Forward, Home) -->
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"> 
 
+<!-- SCRIPTS: Kept all your original scripts -->
 <script src="/scram/scramjet.all.js"></script>
 <script src="baremux/index.js" defer></script>
 <script src="epoxy/index.js" defer></script>
@@ -50,7 +52,7 @@ header {
     align-items: center;
     justify-content: space-between;
     padding: 0 14px;
-    z-index: 5; /* Z-index is 5 so it sits above the iframe/home screen */
+    z-index: 5;
     border-bottom: 1px solid rgba(255, 255, 255, 0.1);
 }
 
@@ -121,7 +123,7 @@ header {
     align-items: center;
     justify-content: center;
     text-align: center;
-    z-index: 2; /* Z-index is 2 so it sits above the iframe when visible */
+    z-index: 2; 
 }
 
 #home-screen h1 {
@@ -148,23 +150,49 @@ header {
     color: white;
     backdrop-filter: blur(8px);
     transition: 0.2s;
+    margin-bottom: 20px; /* Space below search bar */
 }
 
 #home-search:focus {
     background: rgba(255, 255, 255, 0.25);
 }
 
+/* NEW STYLES for the additional buttons */
+.home-buttons-container {
+    display: flex;
+    gap: 15px;
+    margin-top: 10px;
+}
+
+.home-link-btn {
+    background: #1a233b; /* Darker blue background */
+    color: #aad4ff;
+    padding: 10px 20px;
+    border: 1px solid #aad4ff55;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 15px;
+    font-weight: 600;
+    transition: background 0.2s, transform 0.1s;
+}
+
+.home-link-btn:hover {
+    background: #253353; /* Lighter on hover */
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+
 /* Styles for the new iframe */
 #proxy-frame {
     position: absolute;
-    top: 50px; /* Start below the header */
+    top: 50px; 
     left: 0;
     width: 100%;
     height: calc(100% - 50px);
     border: none;
-    z-index: 1; /* Z-index is 1, below the header and the home screen */
-    background: #0a0f1a;
-    display: none; /* Initially hidden */
+    z-index: 1; 
+    display: none; 
 }
 </style>
 </head>
@@ -172,6 +200,7 @@ header {
 <body>
 <div id="particles-js"></div>
 
+<!-- NAVIGATION BAR -->
 <header>
     <div class="nav-buttons">
         <button class="nav-btn" id="back-btn" title="Back">
@@ -185,6 +214,7 @@ header {
         </button>
     </div>
     
+    <!-- Proxy Input in the Header -->
     <form id="sj-form" class="header-search-form">
         <input id="sj-search-engine" value="https://www.google.com/search?q=%s" type="hidden" />
         <input type="text" id="sj-address" placeholder="Search or enter URL..." />
@@ -192,13 +222,24 @@ header {
     
     <div class="header-right-spacer"></div>
 </header>
+<!-- END NAVIGATION BAR -->
+
+<!-- IFRAME to load proxied content into -->
 <iframe id="proxy-frame"></iframe>
 
+<!-- HOME SCREEN -->
 <div id="home-screen">
     <h1>ZGC Proxy</h1>
     <p>Browse freely through the internet — powered by Scramjet</p>
     
+    <!-- HOME SCREEN SEARCH BAR -->
     <input id="home-search" placeholder="Enter URL or Search Query..." />
+
+    <!-- NEW: Additional Buttons -->
+    <div class="home-buttons-container">
+        <button class="home-link-btn" id="homepage-btn">Go to Homepage</button>
+        <button class="home-link-btn" id="about-btn">About</button>
+    </div>
 
     <div class="desc">
         <p id="sj-error"></p>
@@ -215,6 +256,10 @@ document.addEventListener("DOMContentLoaded", () => {
     const homeSearchInput = document.getElementById("home-search");
     const headerSearchInput = document.getElementById("sj-address");
     const sjForm = document.getElementById("sj-form");
+    
+    // NEW BUTTON REFERENCES
+    const homepageBtn = document.getElementById("homepage-btn");
+    const aboutBtn = document.getElementById("about-btn");
 
     // --- Core Logic to Show/Hide Screens ---
     
@@ -232,35 +277,43 @@ document.addEventListener("DOMContentLoaded", () => {
     }
     
     // --- Event Listeners for Search and Home ---
-
+    
     // 1. Submit from Header Bar (#sj-form)
     sjForm.addEventListener("submit", (e) => {
-        // Since the main form is submitted, we assume a search has begun
-        showProxyView();
+        setTimeout(showProxyView, 50); 
     });
 
     // 2. Submit from Home Search Input (#home-search)
     function submitHomeSearch(event) {
         if (event.key === "Enter") {
-            // Transfer the value from the home search input to the header search input (sj-address)
             headerSearchInput.value = homeSearchInput.value;
-            // Now, manually submit the main form to trigger your proxy scripts
-            sjForm.dispatchEvent(new Event('submit')); 
-            showProxyView(); // Immediately hide the home screen
+            sjForm.submit(); 
+            setTimeout(showProxyView, 50); 
         }
     }
     homeSearchInput.addEventListener("keydown", submitHomeSearch);
     
-    // 3. Home Button
+    // 3. Home Button (inside the navigation bar)
     document.getElementById("home-btn").addEventListener("click", showHomeView);
     
-    // 4. Back/Forward (Simplified - depends on your index.js)
+    // 4. Back/Forward 
     document.getElementById("back-btn").addEventListener("click", () => {
-         // Assuming this works with your proxy's history
          proxyFrame.contentWindow.history.back(); 
     });
     document.getElementById("forward-btn").addEventListener("click", () => {
          proxyFrame.contentWindow.history.forward();
+    });
+    
+    // 5. NEW: Homepage Button
+    homepageBtn.addEventListener("click", () => {
+        // Navigates the entire browser window to the specified URL
+        window.location.href = 'https://zgcv2.netlify.app/homepage';
+    });
+
+    // 6. NEW: About Button
+    aboutBtn.addEventListener("click", () => {
+        // Navigates the entire browser window to the specified URL
+        window.location.href = 'https://zgcv2.netlify.app/slammp';
     });
     
     // --- Particle JS Setup ---
