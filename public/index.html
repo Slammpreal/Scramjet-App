@@ -6,200 +6,107 @@
 <title>ZGC Proxy</title>
 
 <link rel="shortcut icon" href="favicon.webp" />
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"> 
-
+<link rel="stylesheet" href="index.css" />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
 <script src="/scram/scramjet.all.js"></script>
 <script src="baremux/index.js" defer></script>
 <script src="epoxy/index.js" defer></script>
 <script src="register-sw.js" defer></script>
 <script src="search.js" defer></script>
-<script src="index.js" defer></script> 
+<script src="index.js" defer></script>
 
 <style>
-/* CSS Variables from your Homepage for consistency */
-:root {
-    --bg-color: #0a0f1a;
-    --nav-color: rgba(0, 0, 0, 0.4);
-    --text-color: #ffffff;
-    --accent-color: #aad4ff;
-    --input-color: rgba(255, 255, 255, 0.1);
-    --shadow-color: rgba(0, 0, 0, 0.5);
-}
-
 html, body {
-    margin: 0;
-    padding: 0;
-    height: 100%;
-    font-family: 'Inter', Arial, sans-serif;
-    background: var(--bg-color); 
-    color: var(--text-color);
-    overflow: hidden;
+  height: 100%;
+  margin: 0;
+  font-family: 'Inter', Arial, sans-serif;
+  background: radial-gradient(circle at top, #041830 0%, #000c1f 100%);
+  color: #fff;
+  overflow: hidden;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 #particles-js {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    z-index: 0;
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -1;
 }
 
-/* Header Styling (Navigation Bar) */
-header {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: 50px;
-    background: var(--nav-color); 
-    backdrop-filter: blur(10px);
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 0 14px;
-    z-index: 5;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+/* Main container */
+.proxy-box {
+  background: rgba(10, 20, 40, 0.6);
+  border: 1px solid rgba(0, 255, 255, 0.15);
+  backdrop-filter: blur(15px);
+  box-shadow: 0 0 25px rgba(0, 191, 255, 0.1);
+  border-radius: 15px;
+  padding: 2.5rem 3rem;
+  text-align: center;
+  width: 90%;
+  max-width: 480px;
+  animation: fadeIn 1.2s ease;
 }
 
-.nav-buttons {
-    display: flex;
-    gap: 8px;
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
-.nav-btn {
-    background: none;
-    border: none;
-    color: var(--accent-color); 
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 6px;
-    border-radius: 8px;
-    transition: all 0.2s;
-    font-size: 1.1rem; 
+.proxy-title {
+  font-size: 2rem;
+  font-weight: 700;
+  background: linear-gradient(90deg, #00e6ff, #007bff);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  margin-bottom: 0.5rem;
 }
 
-.nav-btn:hover {
-    background: var(--input-color);
-    color: var(--text-color);
+.proxy-desc {
+  color: #a0b8d6;
+  font-size: 1rem;
+  margin-bottom: 1.5rem;
 }
 
-.header-search-form {
-    flex-grow: 1;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+#sj-form {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
 }
 
 #sj-address {
-    width: 90%;
-    max-width: 450px;
-    padding: 5px 12px;
-    height: 30px;
-    box-sizing: border-box;
-    border-radius: 8px;
-    border: none;
-    outline: none;
-    background: var(--input-color);
-    color: var(--text-color);
-    font-size: 14px;
-    transition: 0.2s;
+  width: 100%;
+  padding: 0.8rem 1rem;
+  font-size: 0.95rem;
+  border-radius: 10px;
+  border: 1px solid rgba(255,255,255,0.1);
+  outline: none;
+  background: rgba(255, 255, 255, 0.05);
+  color: #fff;
+  transition: all 0.3s ease;
 }
 
 #sj-address:focus {
-    background: rgba(255, 255, 255, 0.2);
+  border-color: rgba(0, 200, 255, 0.6);
+  background: rgba(255,255,255,0.08);
+  box-shadow: 0 0 8px rgba(0, 200, 255, 0.2);
 }
 
-.header-right-spacer {
-    width: 100px;
-    visibility: hidden;
+#sj-address::placeholder {
+  color: #8aa4c0;
 }
 
-/* Home Screen Styling (Simple centered view) */
-#home-screen {
-    position: absolute;
-    top: 50px; 
-    left: 0;
-    width: 100%;
-    height: calc(100% - 50px);
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    text-align: center;
-    z-index: 2; 
-}
-
-#home-screen h1 {
-    font-size: 2.2em;
-    margin-bottom: 10px;
-    color: var(--accent-color);
-}
-
-#home-screen p {
-    color: rgba(255, 255, 255, 0.7);
-    margin-bottom: 25px;
-}
-
-/* Styles for the central search bar */
-#home-search {
-    width: 70%;
-    max-width: 600px;
-    padding: 12px 18px;
-    font-size: 16px;
-    border: none;
-    border-radius: 10px;
-    outline: none;
-    background: rgba(255, 255, 255, 0.15);
-    color: var(--text-color);
-    backdrop-filter: blur(8px);
-    transition: 0.2s;
-    margin-bottom: 20px; 
-}
-
-#home-search:focus {
-    background: rgba(255, 255, 255, 0.25);
-}
-
-/* Styles for the additional buttons */
-.home-buttons-container {
-    display: flex;
-    gap: 15px;
-    margin-top: 10px;
-}
-
-.home-link-btn {
-    background: rgba(255, 255, 255, 0.1); 
-    color: var(--accent-color);
-    padding: 10px 20px;
-    border: 1px solid var(--accent-color);
-    border-radius: 8px;
-    cursor: pointer;
-    font-size: 15px;
-    font-weight: 600;
-    transition: background 0.2s, transform 0.1s;
-}
-
-.home-link-btn:hover {
-    background: rgba(255, 255, 255, 0.15);
-    transform: translateY(-2px);
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
-}
-
-
-/* Styles for the new iframe */
-#proxy-frame {
-    position: absolute;
-    top: 50px; 
-    left: 0;
-    width: 100%;
-    height: calc(100% - 50px);
-    border: none;
-    z-index: 1; 
-    display: none; 
+footer {
+  position: fixed;
+  bottom: 15px;
+  text-align: center;
+  font-size: 0.85rem;
+  color: #6f87a5;
+  width: 100%;
+  opacity: 0.8;
 }
 </style>
 </head>
@@ -207,139 +114,45 @@ header {
 <body>
 <div id="particles-js"></div>
 
-<header>
-    <div class="nav-buttons">
-        <button class="nav-btn" id="back-btn" title="Back">
-            <i class="fas fa-arrow-left"></i>
-        </button>
-        <button class="nav-btn" id="forward-btn" title="Forward">
-            <i class="fas fa-arrow-right"></i>
-        </button>
-        <button class="nav-btn" id="home-btn" title="Home">
-            <i class="fas fa-home"></i>
-        </button>
-    </div>
-    
-    <form id="sj-form" class="header-search-form">
-        <input id="sj-search-engine" value="https://www.google.com/search?q=%s" type="hidden" />
-        <input type="text" id="sj-address" placeholder="Search or enter URL..." />
-    </form>
-    
-    <div class="header-right-spacer"></div>
-</header>
-<iframe id="proxy-frame"></iframe>
+<div class="proxy-box">
+  <h1 class="proxy-title">ZGC Proxy</h1>
+  <p class="proxy-desc">Browse the internet freely — powered by <strong>Scramjet</strong>.</p>
 
-<div id="home-screen">
-    <h1>ZGC Proxy</h1>
-    <p>Browse freely through the internet — powered by Scramjet</p>
-    
-    <input id="home-search" placeholder="Enter URL or Search Query..." />
+  <form id="sj-form">
+    <input id="sj-search-engine" value="https://www.google.com/search?q=%s" type="hidden" />
+    <input id="sj-address" type="text" placeholder="Enter a URL or search term..." />
+  </form>
 
-    <div class="home-buttons-container">
-        <a href="/homepage"><button class="home-link-btn">Go to Homepage</button></a>
-        <a href="/slammp"><button class="home-link-btn">About</button></a>
-    </div>
-
-    <div class="desc">
-        <p id="sj-error"></p>
-        <pre id="sj-error-code"></pre>
-    </div>
+  <div class="desc">
+    <p id="sj-error"></p>
+    <pre id="sj-error-code"></pre>
+  </div>
 </div>
+
+<footer>
+  ZGC Proxy © 2025
+</footer>
 
 <script src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js"></script>
 <script>
 document.addEventListener("DOMContentLoaded", () => {
-    
-    const homeScreen = document.getElementById("home-screen");
-    const proxyFrame = document.getElementById("proxy-frame");
-    const homeSearchInput = document.getElementById("home-search");
-    const headerSearchInput = document.getElementById("sj-address");
-    const sjForm = document.getElementById("sj-form");
-    
-    // --- Core Logic to Show/Hide Screens ---
-    
-    // Function to hide home screen and show iframe
-    function showProxyView() {
-        homeScreen.style.display = 'none';
-        proxyFrame.style.display = 'block';
-    }
-
-    // Function to show home screen and hide iframe
-    function showHomeView() {
-        homeScreen.style.display = 'flex';
-        proxyFrame.style.display = 'none';
-        headerSearchInput.value = ''; // Clear header bar on home return
-    }
-    
-    // --- Event Listeners for Search and Home (FIXES APPLIED HERE) ---
-    
-    // 1. Submit from Header Bar (#sj-form)
-    sjForm.addEventListener("submit", (e) => {
-        e.preventDefault(); 
-        if (typeof Scramjet !== 'undefined' && headerSearchInput.value) {
-            Scramjet.open(headerSearchInput.value);
-            showProxyView();
-        }
-    });
-
-    // 2. Submit from Home Search Input (#home-search) - FIXED: Now works on Enter key.
-    homeSearchInput.addEventListener("keydown", (event) => {
-        if (event.key === "Enter") {
-            const query = homeSearchInput.value;
-            if (typeof Scramjet !== 'undefined' && query) {
-                // Update header input for visual consistency
-                headerSearchInput.value = query; 
-                
-                Scramjet.open(query);
-                showProxyView();
-            }
-        }
-    });
-    
-    // 3. Home Button (inside the navigation bar) - FIXED: Now calls showHomeView
-    document.getElementById("home-btn").addEventListener("click", showHomeView);
-    
-    // 4. Back/Forward Buttons - FIXED: Now manipulate the iframe's history object.
-    document.getElementById("back-btn").addEventListener("click", () => {
-        // Only attempt to navigate if the proxy frame is visible
-        if (proxyFrame.style.display === 'block' && proxyFrame.contentWindow) {
-            proxyFrame.contentWindow.history.back(); 
-        }
-    });
-    
-    document.getElementById("forward-btn").addEventListener("click", () => {
-        // Only attempt to navigate if the proxy frame is visible
-        if (proxyFrame.style.display === 'block' && proxyFrame.contentWindow) {
-            proxyFrame.contentWindow.history.forward();
-        }
-    });
-    
-    // --- Particle JS Setup ---
-    particlesJS("particles-js", {
-        particles: {
-            number: { value: 75, density: { enable: true, value_area: 800 } },
-            color: { value: "#00aaff" },
-            shape: { type: "circle" },
-            opacity: { value: 0.5 },
-            size: { value: 3 },
-            line_linked: {
-                enable: true,
-                distance: 150,
-                color: "#00aaff",
-                opacity: 0.4,
-                width: 1
-            },
-            move: { enable: true, speed: 2 }
-        },
-        interactivity: {
-            events: {
-                onhover: { enable: true, mode: "grab" },
-                onclick: { enable: true, mode: "push" }
-            },
-            modes: { grab: { distance: 140, line_linked: { opacity: 1 } } }
-        },
-        retina_detect: true
-    });
+  particlesJS("particles-js", {
+    particles: {
+      number: { value: 60, density: { enable: true, value_area: 800 } },
+      color: { value: "#00e6ff" },
+      shape: { type: "circle" },
+      opacity: { value: 0.4, random: true },
+      size: { value: 2.5, random: true },
+      line_linked: { enable: true, distance: 140, color: "#00bfff", opacity: 0.25, width: 1 },
+      move: { enable: true, speed: 1.5, random: true, straight: false, out_mode: "out" }
+    },
+    interactivity: {
+      detect_on: "canvas",
+      events: { onhover: { enable: true, mode: "repulse" }, onclick: { enable: true, mode: "push" } },
+      modes: { repulse: { distance: 90 }, push: { particles_nb: 3 } }
+    },
+    retina_detect: true
+  });
 });
 </script>
 </body>
