@@ -1,119 +1,59 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>ZGC Proxy</title>
-<link rel="shortcut icon" href="favicon.webp">
+
+<link rel="shortcut icon" href="favicon.webp" />
+<link rel="stylesheet" href="index.css" />
 <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+<script src="/scram/scramjet.all.js"></script>
+<script src="baremux/index.js" defer></script>
+<script src="epoxy/index.js" defer></script>
+<script src="register-sw.js" defer></script>
+<script src="search.js" defer></script>
+<script src="index.js" defer></script>
 <script src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
 
 <style>
 html, body {
   height: 100%;
   margin: 0;
   font-family: 'Inter', Arial, sans-serif;
-  background: #000c1f;
+  background: radial-gradient(circle at top, #041830 0%, #000c1f 100%);
   color: #fff;
   overflow: hidden;
   display: flex;
-  flex-direction: column;
+  justify-content: center;
+  align-items: center;
 }
 
-/* PARTICLES */
+/* Particles background */
 #particles-js {
   position: fixed;
   top: 0; left: 0;
   width: 100%;
   height: 100%;
-  z-index: 0; /* Behind everything */
+  z-index: -1;
 }
 
-/* Top bar */
-.top-bar {
-  display: flex;
-  align-items: center;
-  padding: 0.5rem 1rem;
-  background: rgba(10,20,40,0.85);
-  border-bottom: 1px solid rgba(0,255,255,0.2);
-  backdrop-filter: blur(15px);
-  box-shadow: 0 0 10px rgba(0,191,255,0.1);
-  z-index: 10;
-}
-
-.top-bar a {
-  color: #00e6ff;
-  font-weight: 600;
-  text-decoration: none;
-  margin-right: 1rem;
-  padding: 0.3rem 0.7rem;
-  border-radius: 6px;
-  border: 1px solid rgba(0,255,255,0.2);
-  transition: all 0.3s ease;
-}
-
-.top-bar a:hover {
-  background: rgba(0,230,255,0.1);
-  box-shadow: 0 0 10px #00e6ff;
-}
-
-#sj-form {
-  flex: 1;
-  display: flex;
-  margin-left: 1rem;
-}
-
-#sj-address {
-  flex: 1;
-  padding: 0.6rem 1rem;
-  border-radius: 8px;
-  border: 1px solid rgba(255,255,255,0.1);
-  outline: none;
-  background: rgba(255,255,255,0.05);
-  color: #fff;
-  font-size: 0.95rem;
-}
-
-#sj-address:focus {
-  border-color: rgba(0,200,255,0.6);
-  background: rgba(255,255,255,0.08);
-  box-shadow: 0 0 8px rgba(0,200,255,0.3);
-}
-
-#sj-address::placeholder {
-  color: #8aa4c0;
-}
-
-/* Fullscreen iframe */
-#proxy-frame {
-  flex: 1;
-  width: 100%;
-  border: none;
-  display: none;
-  z-index: 5;
-}
-
-/* Center box */
-.center-box {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  background: rgba(10,20,40,0.75);
-  border: 1px solid rgba(0,255,255,0.3);
+/* Main proxy box */
+.proxy-box {
+  background: rgba(10, 20, 40, 0.75);
+  border: 1px solid rgba(0, 255, 255, 0.25);
+  backdrop-filter: blur(20px);
+  box-shadow: 0 0 40px rgba(0,191,255,0.2);
   border-radius: 20px;
   padding: 2.5rem 3rem;
   text-align: center;
-  backdrop-filter: blur(20px);
-  box-shadow: 0 0 40px rgba(0,191,255,0.2);
   width: 90%;
-  max-width: 500px;
-  z-index: 5;
-  animation: fadeIn 1s ease;
+  max-width: 480px;
+  animation: fadeIn 1.2s ease;
 }
 
-.center-box h1 {
+.proxy-title {
   font-family: 'Orbitron', sans-serif;
   font-size: 2.2rem;
   font-weight: 700;
@@ -123,71 +63,75 @@ html, body {
   margin-bottom: 0.5rem;
 }
 
-.center-box p {
-  font-style: italic;
+.proxy-desc {
   color: #a0b8d6;
-  margin-bottom: 1.5rem;
   font-size: 1rem;
+  margin-bottom: 1.5rem;
 }
 
-.center-box form {
+/* Form styling */
+#sj-form {
   display: flex;
-  gap: 0.5rem;
-  margin-bottom: 1rem;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
 }
 
-.center-box input {
-  flex: 1;
-  padding: 0.7rem 1rem;
+#sj-address {
+  width: 100%;
+  padding: 0.8rem 1rem;
+  font-size: 0.95rem;
   border-radius: 10px;
   border: 1px solid rgba(255,255,255,0.1);
   outline: none;
-  background: rgba(255,255,255,0.05);
+  background: rgba(255, 255, 255, 0.05);
   color: #fff;
-  font-size: 0.95rem;
-}
-
-.center-box input:focus {
-  border-color: rgba(0,200,255,0.6);
-  background: rgba(255,255,255,0.08);
-  box-shadow: 0 0 10px rgba(0,200,255,0.3);
-}
-
-/* Functional icons */
-.center-box .icons {
-  display: flex;
-  justify-content: center;
-  gap: 2rem;
-  margin-top: 1rem;
-}
-
-.center-box .icons a {
-  color: #00e6ff;
-  font-size: 1.8rem;
   transition: all 0.3s ease;
 }
 
-.center-box .icons a:hover {
+#sj-address:focus {
+  border-color: rgba(0, 200, 255, 0.6);
+  background: rgba(255,255,255,0.08);
+  box-shadow: 0 0 8px rgba(0, 200, 255, 0.2);
+}
+
+#sj-address::placeholder {
+  color: #8aa4c0;
+}
+
+/* Icons under box */
+.icons {
+  margin-top: 1rem;
+  display: flex;
+  justify-content: center;
+  gap: 1.5rem;
+}
+
+.icons a {
+  color: #00e6ff;
+  font-size: 1.6rem;
+  transition: all 0.3s ease;
+}
+
+.icons a:hover {
   transform: scale(1.2);
   color: #007bff;
 }
 
 /* Footer */
 footer {
+  position: fixed;
+  bottom: 15px;
   text-align: center;
-  font-size: 0.8rem;
+  font-size: 0.85rem;
   color: #6f87a5;
+  width: 100%;
   opacity: 0.8;
-  padding: 0.3rem 0;
-  background: rgba(10,20,40,0.6);
-  border-top: 1px solid rgba(0,255,255,0.1);
-  backdrop-filter: blur(10px);
-  z-index: 10;
 }
 
 @keyframes fadeIn {
-  from { opacity: 0; transform: translateY(-10px);}
-  to { opacity: 1; transform: translateY(0);}
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 </style>
 </head>
@@ -195,40 +139,35 @@ footer {
 <body>
 <div id="particles-js"></div>
 
-<!-- Top Bar -->
-<div class="top-bar">
-  <a href="homepage.html"><i class="fas fa-house"></i> Home</a>
-  <a href="projects.html"><i class="fas fa-gamepad"></i> Games</a>
-  <form id="sj-form">
-    <input id="sj-search-engine" value="https://www.google.com/search?q=%s" type="hidden">
-    <input id="sj-address" type="text" placeholder="Enter a URL or search term...">
-  </form>
-</div>
+<div class="proxy-box">
+  <h1 class="proxy-title">ZGC Proxy</h1>
+  <p class="proxy-desc">Browse the internet freely — powered by <strong>Scramjet</strong>.</p>
 
-<!-- Center Box -->
-<div class="center-box">
-  <h1>ZGC Proxy</h1>
-  <p>"Browse the web freely and securely — powered by Scramjet."</p>
-  <form>
-    <input type="text" placeholder="Enter a URL or search term...">
+  <!-- Original proxy form preserved -->
+  <form id="sj-form">
+    <input id="sj-search-engine" value="https://www.google.com/search?q=%s" type="hidden" />
+    <input id="sj-address" type="text" placeholder="Enter a URL or search term..." />
   </form>
+
   <div class="icons">
     <a href="homepage.html" title="Home"><i class="fas fa-house"></i></a>
     <a href="projects.html" title="Games"><i class="fas fa-gamepad"></i></a>
   </div>
-</div>
 
-<!-- Fullscreen iframe -->
-<iframe id="proxy-frame"></iframe>
+  <div class="desc">
+    <p id="sj-error"></p>
+    <pre id="sj-error-code"></pre>
+  </div>
+</div>
 
 <footer>ZGC Proxy © 2025</footer>
 
 <script>
 document.addEventListener("DOMContentLoaded", () => {
-  // PARTICLES
+  // Particles
   particlesJS("particles-js", {
     particles: {
-      number: { value: 80, density: { enable: true, value_area: 800 } },
+      number: { value: 60, density: { enable: true, value_area: 800 } },
       color: { value: "#00e6ff" },
       shape: { type: "circle" },
       opacity: { value: 0.4, random: true },
@@ -242,19 +181,6 @@ document.addEventListener("DOMContentLoaded", () => {
       modes: { repulse: { distance: 90 }, push: { particles_nb: 3 } }
     },
     retina_detect: true
-  });
-
-  // Proxy iframe functionality
-  const form = document.getElementById('sj-form');
-  const address = document.getElementById('sj-address');
-  const iframe = document.getElementById('proxy-frame');
-
-  form.addEventListener('submit', e => {
-    e.preventDefault();
-    let url = address.value.trim();
-    if(!url) return;
-    iframe.src = url.startsWith('http') ? url : 'https://' + url;
-    iframe.style.display = 'block';
   });
 });
 </script>
